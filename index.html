@@ -1,24 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Study Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.1"
   }
 }
 </script>
 </head>
-  <body class="bg-blue-50 text-slate-800">
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+<body class="bg-blue-50 text-slate-800">
+    <div class="min-h-screen font-sans p-4 sm:p-6 lg:p-8">
+        <div class="max-w-4xl mx-auto">
+            <header class="text-center mb-8">
+                <div class="flex items-center justify-center gap-4 mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-blue-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 12.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 15a.75.75 0 100-1.5.75.75 0 000 1.5z"></path>
+                    </svg>
+                    <h1 class="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">
+                        Study Flow
+                    </h1>
+                </div>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Organize your learning, track your progress, and supercharge your study sessions.
+                </p>
+            </header>
+            <main>
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                    <form id="add-item-form" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+                        <div class="flex flex-col">
+                            <label for="topic" class="text-sm font-medium text-gray-700 mb-1">Topic</label>
+                            <input id="topic" type="text" placeholder="e.g., React Hooks" required class="w-full bg-gray-100 text-gray-800 placeholder-gray-400 border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="subject" class="text-sm font-medium text-gray-700 mb-1">Subject</label>
+                            <input id="subject" type="text" placeholder="e.g., Frontend Development" required class="w-full bg-gray-100 text-gray-800 placeholder-gray-400 border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="category" class="text-sm font-medium text-gray-700 mb-1">Category</label>
+                            <select id="category" required class="w-full bg-gray-100 text-gray-800 border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="Homework">Homework</option>
+                                <option value="Test">Test</option>
+                                <option value="Project">Project</option>
+                                <option value="Essay">Essay</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="datetime" class="text-sm font-medium text-gray-700 mb-1">Date & Time</label>
+                            <input id="datetime" type="datetime-local" required class="w-full bg-gray-100 text-gray-800 border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 [color-scheme:light]">
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-md transition-all duration-200 ease-in-out shadow-lg hover:shadow-blue-500/50 transform hover:-translate-y-0.5">
+                            Add Topic
+                        </button>
+                    </form>
+                </div>
+
+                <div class="mt-8 bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-200">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                        <h2 class="text-2xl font-bold text-blue-600">Your Study Plan</h2>
+                        <div id="filter-buttons" class="flex space-x-2">
+                            <button data-filter="ALL" class="px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200">All</button>
+                            <button data-filter="ACTIVE" class="px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200">Active</button>
+                            <button data-filter="COMPLETED" class="px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200">Completed</button>
+                        </div>
+                    </div>
+                    <ul id="study-list" class="space-y-4"></ul>
+                    <div id="empty-list-message" class="text-center py-10 px-6 bg-blue-50/50 rounded-lg hidden">
+                        <p class="text-gray-500">Your study plan is empty.</p>
+                        <p class="text-gray-400 text-sm mt-1">Add a topic above to get started!</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="index.tsx" defer></script>
+</body>
 </html>
