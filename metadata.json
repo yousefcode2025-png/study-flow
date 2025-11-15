@@ -1,0 +1,5 @@
+{
+  "name": "Study Flow",
+  "description": "A smart study planner that helps you organize your study schedule and track your progress. All your data is saved locally in your browser.",
+  "requestFramePermissions": []
+}
